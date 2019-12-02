@@ -1,14 +1,13 @@
 FROM debian:buster
 RUN apt update && \
-	apt install -y nginx && \
-	apt install -y mariadb-server && \
-	apt install -y php-fpm php-mysql
+	apt install -y nginx mariadb-server php-fpm php-mysql
 COPY srcs/pages /var/www/html
 COPY srcs/conf /etc/nginx/sites-available/
-RUN ln -s /etc/nginx/sites-available/test.com /etc/nginx/sites-enabled/
-	# service nginx start
+RUN ln -fs /etc/nginx/sites-available/test.com /etc/nginx/sites-enabled/default
 
 EXPOSE 80
 
-# STOPSIGNAL SIGTERM
-CMD ["nginx", "-g", "daemon off;"]
+CMD service nginx start && \
+	service mysql start && \
+	service php7.3-fpm start && \
+	sleep infinity & wait
