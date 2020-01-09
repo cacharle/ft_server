@@ -1,5 +1,10 @@
 server {
-	listen 80;
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /root/ssl/localhost.pem;
+	ssl_certificate_key /root/ssl/localhost-key.pem;
+
 	server_name localhost;
 	index index.php;
 	root /var/www/wordpress;
@@ -28,3 +33,9 @@ server {
 	}
 }
 
+server {
+	listen 80;
+	listen [::]:80;
+	server_name localhost;
+	return 301 https://$host$request_uri;
+}
